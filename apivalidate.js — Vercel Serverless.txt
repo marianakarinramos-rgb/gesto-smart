@@ -1,24 +1,16 @@
 // api/validate.js — Vercel Serverless Function
-// Valida claves de licencia contra Google Sheets CSV (server-side)
-// y devuelve un token firmado que el cliente almacena en localStorage.
-
 const crypto = require('crypto');
 
-// URL del Google Sheet publicado como CSV
-// Para cambiar la fuente de datos, reemplazá esta URL
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpVC8BrEqZ-NFjGh8dRUvmQhi09Z5SOeryMYnBf7v0_SQsA7MAmOzVlgmbCkEZGAF4LorA3Vu2FC6-/pub?output=csv';
 
-// Secret para firmar tokens — configurar como Variable de Entorno en Vercel
-// Si no existe, usa un fallback (funcional pero menos seguro)
 const SECRET = process.env.GESTO_SECRET || 'gesto-smart-default-secret-change-me';
 
-// Rate limiting simple en memoria (se resetea entre cold starts)
 const intentos = {};
 
 function limpiarIntentos(ip) {
     const ahora = Date.now();
     if (!intentos[ip]) return;
-    intentos[ip] = intentos[ip].filter(t => ahora - t < 300000); // 5 min
+    intentos[ip] = intentos[ip].filter(t => ahora - t < 300000);
     if (intentos[ip].length === 0) delete intentos[ip];
 }
 
@@ -77,20 +69,17 @@ async function leerCSV() {
 }
 
 module.exports = async function handler(req, res) {
-    // CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     if (req.method === 'OPTIONS') return res.status(200).end();
 
-    // Solo POST
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Método no permitido' });
     }
 
     const ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
 
-    // Si es una verificación de token existente
     if (req.body.action === 'verify') {
         const payload = verificarToken(req.body.token);
         if (!payload) {
@@ -104,7 +93,6 @@ module.exports = async function handler(req, res) {
         });
     }
 
-    // Rate limiting
     if (estaBloqueado(ip)) {
         return res.status(429).json({
             error: 'Demasiados intentos. Esperá 5 minutos e intentá de nuevo.',
@@ -127,14 +115,23 @@ module.exports = async function handler(req, res) {
             return res.status(401).json({ error: 'Clave incorrecta o inexistente.' });
         }
 
-        // Validar vencimiento
         const hoy = new Date();
         hoy.setHours(0, 0, 0, 0);
         const partesFecha = cliente.vencimiento.split('-');
         if (partesFecha.length !== 3) {
             return res.status(500).json({ error: 'Error en formato de fecha' });
         }
-        const fechaVenc = new Date(partesFecha[0], partesFecha[1] - 1, partesFecha[2]);
+        let anio, mes, dia;
+        if (partesFecha[0].length === 4) {
+            anio = parseInt(partesFecha[0]);
+            mes = parseInt(partesFecha[1]) - 1;
+            dia = parseInt(partesFecha[2]);
+        } else {
+            dia = parseInt(partesFecha[0]);
+            mes = parseInt(partesFecha[1]) - 1;
+            anio = parseInt(partesFecha[2]);
+        }
+        const fechaVenc = new Date(anio, mes, dia);
         fechaVenc.setHours(0, 0, 0, 0);
         const diasRestantes = Math.ceil((fechaVenc.getTime() - hoy.getTime()) / (1000 * 3600 * 24));
 
@@ -143,7 +140,6 @@ module.exports = async function handler(req, res) {
             return res.status(401).json({ error: 'Clave vencida. Renová tu suscripción.' });
         }
 
-        // Generar token (expira en 30 días o cuando venza la licencia)
         const expDias = Math.min(diasRestantes, 30);
         const token = firmarToken({
             nombre: cliente.nombre,
