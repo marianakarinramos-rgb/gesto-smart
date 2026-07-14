@@ -6,7 +6,7 @@ const crypto = require('crypto');
 
 // URL del Google Sheet publicado como CSV
 // Para cambiar la fuente de datos, reemplazá esta URL
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyxrO896ICOc_J0N_brzrrXX64gmQ4t4uuhdrh_3_8EwumuIEQ3WaoF2oQysCtVWdM7n5rZHrrlSXG/pub?output=csv';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRpVC8BrEqZ-NFjGh8dRUvmQhi09Z5SOeryMYnBf7v0_SQsA7MAmOzVlgmbCkEZGAF4LorA3Vu2FC6-/pub?output=csv';
 
 // Secret para firmar tokens — configurar como Variable de Entorno en Vercel
 // Si no existe, usa un fallback (funcional pero menos seguro)
