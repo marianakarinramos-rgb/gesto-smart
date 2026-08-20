@@ -152,8 +152,86 @@
         .card-web { border-top: 4px solid #10b981; }
         .card-web li::before { color: #10b981; }
 
+        /* --- NUEVA SECCIÓN DE GALERÍA --- */
+        .showcase-section {
+            width: 100%;
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .showcase-section h2 {
+            font-size: 2.2em;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .showcase-section p {
+            color: #8b949e;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+        }
+
+        .gallery-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            width: 45%;
+            max-width: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #30363d;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        /* El efecto cuando "se paran" arriba de la foto */
+        .gallery-item:hover {
+            border-color: #00bfff;
+            box-shadow: 0 15px 30px rgba(0, 191, 255, 0.2);
+            transform: translateY(-10px);
+            z-index: 10;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 11, 20, 0.9);
+            color: #00bfff;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 0.9em;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+
+        /* Sección Contacto */
         .contact-section {
-            margin-top: 60px;
+            margin-top: 80px;
             text-align: center;
             padding: 60px 20px;
             background-color: #0d1117;
@@ -209,9 +287,9 @@
             h1 { font-size: 2.5em; }
             .card { width: 100%; max-width: 400px; }
             .btn { width: 100%; max-width: 300px; display: flex; }
+            .gallery-item { width: 100%; }
         }
 
-        /* --- MAGIA CSS (Destellos) --- */
         .sparkle {
             position: fixed;
             pointer-events: none; 
@@ -269,6 +347,32 @@
                 </ul>
             </div>
         </div>
+
+        <!-- SECCIÓN GALERÍA DE CAPTURAS -->
+        <div class="showcase-section">
+            <h2>Mirá Gesto Smart por dentro</h2>
+            <p>Interfaz oscura, profesional y diseñada para no cansar la vista en el mostrador.</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <!-- ACÁ VAN LOS NOMBRES DE TUS FOTOS -->
+                    <img src="captura1.png" alt="Panel Central" onerror="this.src='https://via.placeholder.com/600x350/161b22/00bfff?text=Sube+captura1.png'">
+                    <div class="gallery-caption">1. Panel Central de Carga de Archivos</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="captura2.png" alt="Calculadora de Stock" onerror="this.src='https://via.placeholder.com/600x350/161b22/00bfff?text=Sube+captura2.png'">
+                    <div class="gallery-caption">2. Calculadora de Stock Real y Neto</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="captura3.png" alt="Catálogos y Flyers" onerror="this.src='https://via.placeholder.com/600x350/161b22/00bfff?text=Sube+captura3.png'">
+                    <div class="gallery-caption">3. Generador Automático de Flyers y PDF</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="captura4.png" alt="Faltantes Web" onerror="this.src='https://via.placeholder.com/600x350/161b22/00bfff?text=Sube+captura4.png'">
+                    <div class="gallery-caption">4. Auditoría de Plata Estancada (Faltantes)</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Sección de Contacto -->
@@ -285,27 +389,19 @@
         </a>
     </div>
 
-    <!-- --- MAGIA JS (Destellos) --- -->
     <script>
-        // Variaciones del celeste corporativo (#00bfff) para darle dinamismo
         const colors = ['#00bfff', '#4dd2ff', '#80dfff']; 
         
         document.addEventListener('mousemove', function(e) {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
-            
             sparkle.style.left = e.clientX + 'px';
             sparkle.style.top = e.clientY + 'px';
-            
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             sparkle.style.backgroundColor = randomColor;
             sparkle.style.boxShadow = `0 0 10px ${randomColor}, 0 0 20px #fff`;
-
             document.body.appendChild(sparkle);
-            
-            setTimeout(() => {
-                sparkle.remove();
-            }, 800);
+            setTimeout(() => { sparkle.remove(); }, 800);
         });
     </script>
 </body>
