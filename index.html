@@ -99,6 +99,8 @@
             width: 320px;
             text-align: left;
             transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
@@ -128,6 +130,7 @@
             color: #c9d1d9;
             font-size: 0.95em;
             line-height: 1.5;
+            flex-grow: 1;
         }
 
         .card li {
@@ -152,158 +155,100 @@
         .card-web { border-top: 4px solid #10b981; }
         .card-web li::before { color: #10b981; }
 
-        /* --- NUEVA SECCIÓN DE GALERÍA --- */
-        .showcase-section {
+        /* Botón Ver Interfaz dentro de las tarjetas */
+        .btn-interfaz {
             width: 100%;
-            margin-top: 80px;
-            text-align: center;
-        }
-
-        .showcase-section h2 {
-            font-size: 2.2em;
-            color: #ffffff;
-            margin-bottom: 10px;
-        }
-
-        .showcase-section p {
-            color: #8b949e;
-            font-size: 1.1em;
-            margin-bottom: 40px;
-        }
-
-        .gallery-grid {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-            padding: 0 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .gallery-item {
-            width: 45%;
-            max-width: 500px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 2px solid #30363d;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.4s ease;
-        }
-
-        /* El efecto cuando "se paran" arriba de la foto */
-        .gallery-item:hover {
-            border-color: #00bfff;
-            box-shadow: 0 15px 30px rgba(0, 191, 255, 0.2);
-            transform: translateY(-10px);
-            z-index: 10;
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-
-        .gallery-caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(5, 11, 20, 0.9);
-            color: #00bfff;
+            margin-top: 20px;
             padding: 10px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            color: #00bfff;
+            border-radius: 8px;
             font-weight: bold;
-            font-size: 0.9em;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-interfaz:hover {
+            background-color: #30363d;
+            color: #ffffff;
         }
 
-        .gallery-item:hover .gallery-caption {
-            transform: translateY(0);
+        /* --- SISTEMA MODAL (VENTANA EMERGENTE) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5, 11, 20, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .modal-content {
+            width: 95%; max-width: 1000px;
+            background: #161b22; border: 1px solid #30363d;
+            border-radius: 16px; padding: 25px;
+            position: relative; display: flex; flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .close-modal {
+            position: absolute; top: 15px; right: 20px;
+            color: #8b949e; font-size: 28px; font-weight: bold;
+            cursor: pointer; transition: color 0.2s; line-height: 1;
+        }
+        .close-modal:hover { color: #ef4444; }
+        .modal-header {
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 1px solid #30363d;
+        }
+        .modal-title { color: #fff; font-size: 1.5em; font-weight: bold; }
+        .modal-gallery {
+            display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px;
+            scrollbar-width: thin; scrollbar-color: #30363d #0d1117;
+        }
+        .modal-gallery::-webkit-scrollbar { height: 8px; }
+        .modal-gallery::-webkit-scrollbar-track { background: #0d1117; border-radius: 4px; }
+        .modal-gallery::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+        
+        .modal-gallery img {
+            height: 450px; width: auto; object-fit: contain;
+            border-radius: 8px; border: 1px solid #30363d; background: #0d1117;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         /* Sección Contacto */
         .contact-section {
-            margin-top: 80px;
-            text-align: center;
-            padding: 60px 20px;
-            background-color: #0d1117;
-            border-top: 1px solid #30363d;
-            width: 100%;
-            position: relative;
-            z-index: 10;
+            margin-top: 80px; text-align: center; padding: 60px 20px;
+            background-color: #0d1117; border-top: 1px solid #30363d;
+            width: 100%; position: relative; z-index: 10;
         }
-
-        .contact-section h2 {
-            color: #fff;
-            font-size: 2.2em;
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-
-        .contact-section p {
-            color: #8b949e;
-            font-size: 1.1em;
-            margin-bottom: 35px;
-        }
-
+        .contact-section h2 { color: #fff; font-size: 2.2em; margin-top: 0; margin-bottom: 10px; }
+        .contact-section p { color: #8b949e; font-size: 1.1em; margin-bottom: 35px; }
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 30px;
-            margin: 10px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1em;
-            color: #ffffff;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 14px 30px; margin: 10px; border-radius: 50px;
+            text-decoration: none; font-weight: bold; font-size: 1.1em; color: #ffffff;
             transition: transform 0.2s, opacity 0.2s;
         }
-
-        .btn:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
-
-        .btn-wa {
-            background-color: #25D366;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
-        }
-
-        .btn-ig {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            box-shadow: 0 4px 15px rgba(220, 39, 67, 0.2);
-        }
+        .btn:hover { transform: scale(1.05); opacity: 0.9; }
+        .btn-wa { background-color: #25D366; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); }
+        .btn-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 4px 15px rgba(220, 39, 67, 0.2); }
 
         @media (max-width: 768px) {
             h1 { font-size: 2.5em; }
             .card { width: 100%; max-width: 400px; }
             .btn { width: 100%; max-width: 300px; display: flex; }
-            .gallery-item { width: 100%; }
+            .modal-gallery img { height: 250px; }
         }
 
+        /* Magia CSS */
         .sparkle {
-            position: fixed;
-            pointer-events: none; 
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            animation: fadeOut 0.8s forwards;
-            z-index: 9999;
+            position: fixed; pointer-events: none; width: 6px; height: 6px;
+            border-radius: 50%; animation: fadeOut 0.8s forwards; z-index: 9999;
         }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0); }
-        }
+        @keyframes fadeOut { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0); } }
     </style>
 </head>
 <body>
@@ -317,6 +262,7 @@
         </div>
 
         <div class="cards-container">
+            <!-- Tarjeta Retail -->
             <div class="card card-retail">
                 <h3>Retail & PyMEs</h3>
                 <div class="card-desc">Control total de mostrador, sin exponer tus números.</div>
@@ -325,8 +271,10 @@
                     <li><strong>Punto de Venta ágil:</strong> Cobrá o armá presupuestos en 2 clics.</li>
                     <li><strong>Módulo RRHH:</strong> Cálculo exacto de comisiones y márgenes reales.</li>
                 </ul>
+                <button onclick="abrirModal('retail')" class="btn-interfaz">📸 Ver Interfaz</button>
             </div>
 
+            <!-- Tarjeta Salones -->
             <div class="card card-salon">
                 <h3>Salones de Belleza</h3>
                 <div class="card-desc">Historial clínico y caja diaria en un solo flujo.</div>
@@ -335,8 +283,10 @@
                     <li><strong>Stock Automático:</strong> Al cobrar el servicio, se descuentan los insumos usados al instante.</li>
                     <li><strong>Métricas Clave:</strong> Alerta de clientas ausentes (+90 días) para reactivar ventas.</li>
                 </ul>
+                <button onclick="abrirModal('salon')" class="btn-interfaz" style="color:#ec4899;">📸 Ver Interfaz</button>
             </div>
 
+            <!-- Tarjeta Web -->
             <div class="card card-web">
                 <h3>E-commerce & Catálogos</h3>
                 <div class="card-desc">Sincronizá tu stock web sin ser programador.</div>
@@ -345,32 +295,7 @@
                     <li><strong>Generador de Catálogos:</strong> Creá flyers listos para WhatsApp o Estados usando las fotos.</li>
                     <li><strong>Cero Estrés:</strong> Olvidate de armar archivos CSV a mano.</li>
                 </ul>
-            </div>
-        </div>
-
-        <!-- SECCIÓN GALERÍA DE CAPTURAS -->
-        <div class="showcase-section">
-            <h2>Mirá Gesto Smart por dentro</h2>
-            <p>Interfaz oscura, profesional y diseñada para no cansar la vista en el mostrador.</p>
-            
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <!-- ACÁ VAN LOS NOMBRES DE TUS FOTOS -->
-                    <img src="captura1.png" alt="Panel Central" onerror="this.src='https://via.placeholder.com/600x350/161b22/00bfff?text=Sube+captura1.png'">
-                    <div class="gallery-caption">1. Panel Central de Carga de Archivos</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="captura2.png" alt="Calculadora de Stock" onerror="this.src='https://via.placeholder.com/600x350/161b22/00bfff?text=Sube+captura2.png'">
-                    <div class="gallery-caption">2. Calculadora de Stock Real y Neto</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="captura3.png" alt="Catálogos y Flyers" onerror="this.src='https://via.placeholder.com/600x350/161b22/00bfff?text=Sube+captura3.png'">
-                    <div class="gallery-caption">3. Generador Automático de Flyers y PDF</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="captura4.png" alt="Faltantes Web" onerror="this.src='https://via.placeholder.com/600x350/161b22/00bfff?text=Sube+captura4.png'">
-                    <div class="gallery-caption">4. Auditoría de Plata Estancada (Faltantes)</div>
-                </div>
+                <button onclick="abrirModal('web')" class="btn-interfaz" style="color:#10b981;">📸 Ver Interfaz</button>
             </div>
         </div>
     </div>
@@ -389,9 +314,65 @@
         </a>
     </div>
 
+    <!-- EL MODAL INVISIBLE (Se llena dinámicamente) -->
+    <div id="imageModal" class="modal-overlay" onclick="cerrarModalFondo(event)">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarModal()">×</span>
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Interfaz del Módulo</div>
+            </div>
+            <!-- Acá adentro se inyectan las fotos -->
+            <div id="modalGallery" class="modal-gallery"></div>
+        </div>
+    </div>
+
     <script>
-        const colors = ['#00bfff', '#4dd2ff', '#80dfff']; 
+        // --- 1. CONFIGURACIÓN DE IMÁGENES POR MÓDULO ---
+        // Acá decidís qué capturas se abren en cada botón.
+        const imagenesApp = {
+            'retail': { 
+                titulo: 'Interfaz: Retail & PyMEs', 
+                fotos: ['captura1.png', 'captura2.png'] // Agregá más si querés
+            },
+            'salon': { 
+                titulo: 'Interfaz: Salones de Belleza', 
+                fotos: ['captura5.png'] // Cambiá por las fotos reales de peluquerías
+            },
+            'web': { 
+                titulo: 'Interfaz: E-commerce & Catálogos', 
+                fotos: ['captura3.png', 'captura4.png', 'captura6.png'] 
+            }
+        };
+
+        const modal = document.getElementById('imageModal');
+        const modalGallery = document.getElementById('modalGallery');
+        const modalTitle = document.getElementById('modalTitle');
+
+        // Función que abre el modal y carga las fotos
+        function abrirModal(modulo) {
+            const data = imagenesApp[modulo];
+            modalTitle.innerText = data.titulo;
+            
+            // Crea las etiquetas <img> dinámicamente
+            modalGallery.innerHTML = data.fotos.map(foto => 
+                `<img src="${foto}" alt="Interfaz ${modulo}" onerror="this.src='https://via.placeholder.com/600x450/0d1117/8b949e?text=Falta+${foto}'">`
+            ).join('');
+            
+            modal.classList.add('active');
+        }
+
+        // Funciones para cerrar
+        function cerrarModal() {
+            modal.classList.remove('active');
+        }
         
+        function cerrarModalFondo(e) {
+            // Si hace clic en lo oscuro fuera de la caja, también se cierra
+            if (e.target === modal) cerrarModal();
+        }
+
+        // --- 2. MAGIA DEL CURSOR ---
+        const colors = ['#00bfff', '#4dd2ff', '#80dfff']; 
         document.addEventListener('mousemove', function(e) {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
