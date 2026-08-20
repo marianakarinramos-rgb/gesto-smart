@@ -1,24 +1,392 @@
-<script>
-        // Mapeo detallado de módulos
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gesto Smart | La App de tu Negocio</title>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            background-color: #050b14;
+            background-image: radial-gradient(circle, #1e293b 1.5px, transparent 1.5px);
+            background-size: 30px 30px;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            text-align: center;
+            padding: 0 20px 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(0, 191, 255, 0.4);
+            margin-bottom: 25px;
+            display: block; 
+            object-fit: cover;
+        }
+
+        .badge {
+            background-color: rgba(0, 191, 255, 0.1);
+            border: 1px solid #00bfff;
+            color: #00bfff;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #ffffff;
+            margin: 0 0 15px 0;
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        .highlight { color: #00bfff; }
+
+        .subtitle {
+            font-size: 1.25em;
+            color: #8b949e;
+            max-width: 650px;
+            margin: 0 auto 40px auto;
+            line-height: 1.6;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .card {
+            background-color: rgba(22, 27, 34, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 30px;
+            width: 320px;
+            text-align: left;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .card h3 {
+            color: #ffffff;
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .card-desc {
+            font-size: 0.9em;
+            color: #8b949e;
+            font-style: italic;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .card ul {
+            padding-left: 0;
+            list-style-type: none;
+            color: #c9d1d9;
+            font-size: 0.95em;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .card li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .card-retail { border-top: 4px solid #3b82f6; }
+        .card-retail li::before { color: #3b82f6; }
+
+        .card-salon { border-top: 4px solid #ec4899; }
+        .card-salon li::before { color: #ec4899; }
+
+        .card-web { border-top: 4px solid #10b981; }
+        .card-web li::before { color: #10b981; }
+
+        .btn-interfaz {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            color: #00bfff;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-interfaz:hover {
+            background-color: #30363d;
+            color: #ffffff;
+        }
+
+        /* --- MODAL VERTICAL ESTABILIZADO --- */
+        body.modal-open {
+            overflow: hidden; 
+            padding-right: 8px; 
+        }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5, 11, 20, 0.95);
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+
+        .modal-content {
+            width: 100%; max-width: 900px;
+            max-height: 90vh; 
+            background: #161b22; border: 1px solid #30363d;
+            border-radius: 16px; padding: 25px;
+            position: relative; display: flex; flex-direction: column;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+
+        .close-modal {
+            position: absolute; top: 15px; right: 20px;
+            color: #8b949e; font-size: 28px; font-weight: bold;
+            cursor: pointer; transition: color 0.2s; line-height: 1;
+            z-index: 10;
+        }
+        
+        .close-modal:hover { color: #ef4444; }
+        
+        .modal-header {
+            margin-bottom: 15px; padding-bottom: 12px;
+            border-bottom: 1px solid #30363d;
+            flex-shrink: 0; 
+        }
+        
+        .modal-title { color: #fff; font-size: 1.3em; font-weight: bold; }
+        
+        .modal-body {
+            overflow-y: scroll; 
+            padding-right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-grow: 1;
+        }
+        
+        .modal-body::-webkit-scrollbar { width: 8px; }
+        .modal-body::-webkit-scrollbar-track { background: #0d1117; border-radius: 4px; }
+        .modal-body::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+        .modal-body::-webkit-scrollbar-thumb:hover { background: #00bfff; }
+        
+        .modal-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        
+        .modal-item-title {
+            color: #00bfff;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .modal-item img {
+            width: 100%;
+            height: auto;
+            min-height: 200px; 
+            border-radius: 6px;
+            display: block;
+            background-color: #161b22; 
+        }
+
+        /* Sección Contacto */
+        .contact-section {
+            margin-top: 80px; text-align: center; padding: 60px 20px;
+            background-color: #0d1117; border-top: 1px solid #30363d;
+            width: 100%; position: relative; z-index: 10;
+        }
+        .contact-section h2 { color: #fff; font-size: 2.2em; margin-top: 0; margin-bottom: 10px; }
+        .contact-section p { color: #8b949e; font-size: 1.1em; margin-bottom: 35px; }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 14px 30px; margin: 10px; border-radius: 50px;
+            text-decoration: none; font-weight: bold; font-size: 1.1em; color: #ffffff;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); opacity: 0.9; }
+        .btn-wa { background-color: #25D366; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); }
+        .btn-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 4px 15px rgba(220, 39, 67, 0.2); }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            .card { width: 100%; max-width: 400px; }
+            .btn { width: 100%; max-width: 300px; display: flex; }
+            .modal-content { padding: 15px; }
+        }
+
+        .sparkle {
+            position: fixed; pointer-events: none; width: 6px; height: 6px;
+            border-radius: 50%; animation: fadeOut 0.8s forwards; z-index: 8000; 
+        }
+        @keyframes fadeOut { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="header">
+            <img src="logo.jpg" alt="Gesto Smart Logo" class="logo">
+            <div class="badge">⚡ PAGO ÚNICO. SIN INTERNET. ULTRA FÁCILES.</div>
+            <h1>La App de tu negocio<br><span class="highlight">no tiene que ser un dolor de cabeza.</span></h1>
+            <p class="subtitle">Elegí la App diseñada exactamente para tu rubro. Dejá de pelear con planillas de Excel y empezá a gestionar de verdad, sin fricción y manteniendo tus datos seguros.</p>
+        </div>
+
+        <div class="cards-container">
+            <!-- Tarjeta Retail -->
+            <div class="card card-retail">
+                <h3>Retail & PyMEs</h3>
+                <div class="card-desc">Control total de mostrador, sin exponer tus números.</div>
+                <ul>
+                    <li><strong>Modo Dueño/Vendedor:</strong> Bloqueá el acceso a costos y rentabilidad con un PIN. Tus empleados solo ven la caja.</li>
+                    <li><strong>Punto de Venta ágil:</strong> Cobrá o armá presupuestos en 2 clics.</li>
+                    <li><strong>Módulo RRHH:</strong> Cálculo exacto de comisiones y márgenes reales.</li>
+                </ul>
+                <button onclick="abrirModal('retail')" class="btn-interfaz">📸 Ver Interfaz</button>
+            </div>
+
+            <!-- Tarjeta Salones -->
+            <div class="card card-salon">
+                <h3>Estética & Servicios</h3>
+                <div class="card-desc">Historial clínico y caja diaria en un solo flujo.</div>
+                <ul>
+                    <li><strong>Fichero Inteligente:</strong> Guardá fórmulas, servicios e historial de cada cliente.</li>
+                    <li><strong>Stock Automático:</strong> Al cobrar el servicio, se descuentan los insumos usados al instante.</li>
+                    <li><strong>Métricas Clave:</strong> Alerta de clientes ausentes (+90 días) para reactivar ventas.</li>
+                </ul>
+                <button onclick="abrirModal('salon')" class="btn-interfaz" style="color:#ec4899;">📸 Ver Interfaz</button>
+            </div>
+
+            <!-- Tarjeta Web -->
+            <div class="card card-web">
+                <h3>E-commerce & Catálogos</h3>
+                <div class="card-desc">Sincronizá tu stock web sin ser programador.</div>
+                <ul>
+                    <li><strong>Cruce Automático:</strong> Subí tu Excel y la App cruza stock físico vs tienda online al instante.</li>
+                    <li><strong>Generador de Catálogos:</strong> Creá flyers listos para WhatsApp o Estados usando las fotos.</li>
+                    <li><strong>Cero Estrés:</strong> Olvidate de armar archivos CSV a mano.</li>
+                </ul>
+                <button onclick="abrirModal('web')" class="btn-interfaz" style="color:#10b981;">📸 Ver Interfaz</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Contacto -->
+    <div class="contact-section">
+        <h2>¿Lista para profesionalizar tu gestión?</h2>
+        <p>Hablemos directo. Sin intermediarios, de emprendedora a emprendedor.</p>
+        
+        <a href="https://wa.me/5491121586674" target="_blank" class="btn btn-wa">
+            💬 Escribime por WhatsApp
+        </a>
+        
+        <a href="https://www.instagram.com/gesto.smart/" target="_blank" class="btn btn-ig">
+            📸 Seguime en @gesto.smart
+        </a>
+    </div>
+
+    <!-- MODAL VERTICAL -->
+    <div id="imageModal" class="modal-overlay" onclick="cerrarModalFondo(event)">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarModal()">×</span>
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Interfaz del Módulo</div>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
         const modulosData = {
             'retail': { 
                 titulo: 'Módulo: Retail & PyMEs', 
                 items: [
-                    { 
-                        titulo: 'Imágenes en preparación...', 
-                        // Usamos un placeholder profesional hasta que subas 'retail1.png'
-                        archivo: 'https://via.placeholder.com/800x450/0d1117/00bfff?text=Interfaz+Retail+en+preparaci%C3%B3n' 
-                    }
+                    { titulo: '1. Base de Clientes', archivo: 'retail1.png' },
+                    { titulo: '2. Punto de Venta (Carrito)', archivo: 'retail2.png' },
+                    { titulo: '3. Gestión de Presupuestos Pendientes', archivo: 'retail3.png' },
+                    { titulo: '4. Panel de Remitos y Entregas', archivo: 'retail4.png' },
+                    { titulo: '5. Caja Diaria e Historial', archivo: 'retail5.png' },
+                    { titulo: '6. Gestión de Inventario y Stock', archivo: 'retail6.png' },
+                    { titulo: '7. Listas de Precios y Costos', archivo: 'retail7.png' },
+                    { titulo: '8. Tablero de Rentabilidad y Gastos Fijos', archivo: 'retail8.png' }
                 ]
             },
             'salon': { 
-                titulo: 'Módulo: Salones de Belleza & Estética', 
+                titulo: 'Módulo: Estética & Servicios', 
                 items: [
-                    { 
-                        titulo: 'Imágenes en preparación...', 
-                        // Usamos un placeholder profesional hasta que subas 'salon1.png'
-                        archivo: 'https://via.placeholder.com/800x450/0d1117/ec4899?text=Interfaz+Salones+en+preparaci%C3%B3n' 
-                    }
+                    { titulo: '1. Fichero de Clientes y Fórmulas', archivo: 'salon1.png' },
+                    { titulo: '2. Agenda Inteligente', archivo: 'salon2.png' },
+                    { titulo: '3. Caja Diaria (Integrada con Stock)', archivo: 'salon3.png' },
+                    { titulo: '4. Stock y Control de Insumos', archivo: 'salon4.png' },
+                    { titulo: '5. Balance y Rentabilidad Neta', archivo: 'salon5.png' },
+                    { titulo: '6. Generador de Textos para Redes', archivo: 'salon6.png' }
                 ]
             },
             'web': { 
@@ -42,11 +410,10 @@
             const data = modulosData[modulo];
             modalTitle.innerText = data.titulo;
             
-            // Inyectamos las imágenes con el ancho al 100% para evitar el scroll horizontal feo
             modalBody.innerHTML = data.items.map(item => `
                 <div class="modal-item">
                     <span class="modal-item-title">${item.titulo}</span>
-                    <img src="${item.archivo}" style="width: 100%; height: auto; max-width: 100%; display: block;" alt="${item.titulo}">
+                    <img src="${item.archivo}" alt="${item.titulo}" onerror="this.src='https://via.placeholder.com/800x450/0d1117/8b949e?text=Cargando+Imagen...'">
                 </div>
             `).join('');
             
@@ -80,3 +447,5 @@
             setTimeout(() => { sparkle.remove(); }, 800);
         });
     </script>
+</body>
+</html>
